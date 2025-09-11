@@ -9,8 +9,8 @@ The system uses TF-IDF (Term Frequency-Inverse Document Frequency) vectorization
 ## Example Output
 When searching for "Avengers: Infinity War", the system might return:
 
--Avengers: Endgame
--The Avengers
--Avengers: Age of Ultron
--Avengers Assemble
--Ultimate Avengers
+- Avengers: Endgame
+- The Avengers
+- Avengers: Age of Ultron
+- Avengers Assemble
+- Ultimate Avengers
