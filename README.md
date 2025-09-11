@@ -6,7 +6,7 @@ A content-based movie recommendation system that suggests similar movies based o
 
 The system uses TF-IDF (Term Frequency-Inverse Document Frequency) vectorization to convert movie titles into numerical representations. It then calculates cosine similarity between movies to find the most similar titles based on textual similarity.
 
-##Example Output
+## Example Output
 When searching for "Avengers: Infinity War", the system might return:
 
 -Avengers: Endgame
