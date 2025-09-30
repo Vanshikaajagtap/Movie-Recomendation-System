@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #16003c;
+            color: #fdeded;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: #ffebfc;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(120, 48, 202, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #380075;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.222);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #5500b0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-section {
+            background-color: #856eae;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(211, 255, 173, 0.2);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ebdbfd;
+            color: #3f006f;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            background-color: #b991ff;
+            box-shadow: 0 0 0 2px #f6ffc1;
+        }
+        
+        button {
+            padding: 15px 25px;
+            background-color: #e6cbff;
+            color: #37007b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #672192;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 146, 239, 0.2);
+        }
+        
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .results-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .selected-movie, .recommendations {
+            background-color: #ffebfc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #250064;
+            border-bottom: 2px solid #f8c7ff;
+            padding-bottom: 10px;
+        }
+        
+        .movie-card {
+            background-color: #af94dd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .movie-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #22005c;
+            margin-bottom: 10px;
+        }
+        
+        .movie-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .genre-tag {
+            background-color: #dcc8ff;
+            color: #2a0668;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .movie-details {
+            display: flex;
+            justify-content: space-between;
+            color: #5a0692;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #a0a0a0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(255, 134, 86, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Movie Recommendation System</h1>
+            <p class="subtitle">Discover movies similar to your favorites using our AI-powered recommendation engine</p>
+        </header>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="movie-search" placeholder="Enter a movie title (e.g., Avatar, Inception, The Matrix)">
+                <button id="search-btn">Find Similar Movies</button>
+            </div>
+            <div id="search-error" class="error hidden">Please enter a movie title with at least 3 characters</div>
+            <div class="suggestions">
+                <span>Try: </span>
+                <span class="suggestion" data-movie="Avatar">Avatar</span>
+                <span class="suggestion" data-movie="Inception">Inception</span>
+                <span class="suggestion" data-movie="The Dark Knight">The Dark Knight</span>
+                <span class="suggestion" data-movie="Pulp Fiction">Pulp Fiction</span>
+            </div>
+            
+            <div class="server-config">
+                <div>Backend Server Configuration:</div>
+                <div class="config-input">
+                    <input type="text" id="server-url" placeholder="http://localhost:5000" value="http://localhost:5000">
+                    <button id="test-connection">Test Connection</button>
+                </div>
+                <div id="connection-status"></div>
+            </div>
+        </section>
+        
+        <section class="results-section">
+            <div class="selected-movie">
+                <h2 class="section-title">Selected Movie</h2>
+                <div id="selected-movie-content" class="loading">Search for a movie to see details</div>
+            </div>
+            
+            <div class="recommendations">
+                <h2 class="section-title">Recommended Movies</h2>
+                <div id="recommendations-content" class="loading">Recommendations will appear here</div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Movie Recommendation System &copy; 2025 | Powered by TMDB Dataset</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM elements
+        const searchInput = document.getElementById('movie-search');
+        const searchBtn = document.getElementById('search-btn');
+        const searchError = document.getElementById('search-error');
+        const selectedMovieContent = document.getElementById('selected-movie-content');
+        const recommendationsContent = document.getElementById('recommendations-content');
+        const suggestions = document.querySelectorAll('.suggestion');
+        const serverUrlInput = document.getElementById('server-url');
+        const testConnectionBtn = document.getElementById('test-connection');
+        const connectionStatus = document.getElementById('connection-status');
+
+        // Backend API endpoints
+        let backendUrl = 'http://localhost:5002';
+        
+        // Event listeners
+        searchBtn.addEventListener('click', handleSearch);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        // Add event listeners to suggestion buttons
+        suggestions.forEach(suggestion => {
+            suggestion.addEventListener('click', function() {
+                searchInput.value = this.getAttribute('data-movie');
+                handleSearch();
+            });
+        });
+
+        // Update backend URL when input changes
+        serverUrlInput.addEventListener('change', function() {
+            backendUrl = this.value;
+            connectionStatus.textContent = `Server URL set to: ${backendUrl}`;
+            connectionStatus.style.color = '#4a8cff';
+        });
+
+        // Test connection to backend
+        testConnectionBtn.addEventListener('click', testBackendConnection);
+
+        // Test backend connection
+        async function testBackendConnection() {
+            connectionStatus.textContent = 'Testing connection...';
+            connectionStatus.style.color = '#a0a0a0';
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    connectionStatus.textContent = '✓ Connection successful!';
+                    connectionStatus.style.color = '#4caf50';
+                } else {
+                    connectionStatus.textContent = '✗ Connection failed';
+                    connectionStatus.style.color = '#ff6b6b';
+                }
+            } catch (error) {
+                connectionStatus.textContent = '✗ Connection error: ' + error.message;
+                connectionStatus.style.color = '#ff6b6b';
+            }
+        }
+
+        // Search function that connects to backend
+        async function handleSearch() {
+            const query = searchInput.value.trim();
+            
+            // Validation
+            if (query.length < 3) {
+                searchError.textContent = "Please enter a movie title with at least 3 characters";
+                searchError.classList.remove('hidden');
+                return;
+            } else {
+                searchError.classList.add('hidden');
+            }
+            
+            // Show loading state
+            selectedMovieContent.innerHTML = '<div class="loading">Searching for movies...</div>';
+            recommendationsContent.innerHTML = '<div class="loading">Finding recommendations...</div>';
+            
+            try {
+                // Step 1: Search for movies using backend API
+                const searchResponse = await fetch(`${backendUrl}/api/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title: query })
+                });
+                
+                if (!searchResponse.ok) {
+                    throw new Error(`Search failed: ${searchResponse.status}`);
+                }
+                
+                const searchResults = await searchResponse.json();
+                
+                if (searchResults.movies && searchResults.movies.length > 0) {
+                    // Use the first result as selected movie
+                    const selectedMovie = searchResults.movies[0];
+                    displaySelectedMovie(selectedMovie);
+                    
+                    // Step 2: Get recommendations for the selected movie
+                    const recResponse = await fetch(`${backendUrl}/api/recommend`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ movie_id: selectedMovie.id })
+                    });
+                    
+                    if (!recResponse.ok) {
+                        throw new Error(`Recommendation failed: ${recResponse.status}`);
+                    }
+                    
+                    const recommendations = await recResponse.json();
+                    displayRecommendations(recommendations.movies);
+                } else {
+                    selectedMovieContent.innerHTML = '<div class="error">Movie not found. Try another title.</div>';
+                    recommendationsContent.innerHTML = '<div class="loading">No recommendations available</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                selectedMovieContent.innerHTML = `<div class="error">Error connecting to backend: ${error.message}</div>`;
+                recommendationsContent.innerHTML = '<div class="loading">No recommendations available</div>';
+            }
+        }
+
+        // Display selected movie
+        function displaySelectedMovie(movie) {
+            // Parse genres if they're in string format
+            let genres = movie.genres;
+            if (typeof genres === 'string') {
+                try {
+                    genres = JSON.parse(genres.replace(/'/g, '"'));
+                } catch (e) {
+                    genres = [genres];
+                }
+            }
+            
+            selectedMovieContent.innerHTML = `
+                <div class="movie-card">
+                    <div class="movie-title">${movie.title} (${movie.year || 'N/A'})</div>
+                    <div class="movie-genres">
+                        ${Array.isArray(genres) ? 
+                          genres.map(genre => `<span class="genre-tag">${genre}</span>`).join('') : 
+                          `<span class="genre-tag">${genres}</span>`}
+                    </div>
+                    <div class="movie-details">
+                        <span>Rating: ${movie.rating || 'N/A'}/10</span>
+                        <span>ID: ${movie.id}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Display recommendations
+        function displayRecommendations(movies) {
+            if (movies && movies.length > 0) {
+                recommendationsContent.innerHTML = movies.map(movie => {
+                    // Parse genres if they're in string format
+                    let genres = movie.genres;
+                    if (typeof genres === 'string') {
+                        try {
+                            genres = JSON.parse(genres.replace(/'/g, '"'));
+                        } catch (e) {
+                            genres = [genres];
+                        }
+                    }
+                    
+                    return `
+                        <div class="movie-card">
+                            <div class="movie-title">${movie.title} (${movie.year || 'N/A'})</div>
+                            <div class="movie-genres">
+                                ${Array.isArray(genres) ? 
+                                  genres.map(genre => `<span class="genre-tag">${genre}</span>`).join('') : 
+                                  `<span class="genre-tag">${genres}</span>`}
+                            </div>
+                            <div class="movie-details">
+                                <span>Rating: ${movie.rating || 'N/A'}/10</span>
+                                <span>ID: ${movie.id}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                recommendationsContent.innerHTML = '<div class="error">No recommendations found</div>';
+            }
+        }
+
+        // Initialize with default values
+        window.addEventListener('DOMContentLoaded', () => {
+            searchInput.value = "Avatar";
+            serverUrlInput.value = backendUrl;
+        });
+    </script>
+</body>
+</html>
