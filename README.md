@@ -1,45 +1,45 @@
-# Movie-Recomendation-System
+# Movie Recommendation System
 
-A content-based movie recommendation system that suggests similar movies based on title similarity using TF-IDF vectorization and cosine similarity.
+A intelligent movie recommendation system built with Flask that suggests movies based on user preferences and content-based filtering.
 
-## How It Works
+## Problem Statement
 
-### 1. Data Loading and Preprocessing
-- Loads two datasets: `tmdb_5000_movies.csv` (movie details) and `tmdb_5000_credits.csv` (cast/crew info)
-- Cleans movie titles by removing special characters using regex
-- Creates a clean title column for better text processing
+Traditional movie discovery methods often fail to provide personalized suggestions, leading to users spending excessive time searching for content they'll enjoy. This system solves the "what to watch next" problem by leveraging machine learning to provide tailored movie recommendations based on content similarity and user preferences.
 
-### 2. TF-IDF Vectorization
-- Uses `TfidfVectorizer` with n-gram range (1,2) to capture single words and word pairs
-- Transforms all cleaned movie titles into numerical TF-IDF vectors
-- This converts text data into a format that can be used for mathematical similarity calculations
+## Tech Stack
 
-### 3. Search Function
-- Takes a search query and cleans it using the same preprocessing
-- Transforms the query into a TF-IDF vector
-- Calculates cosine similarity between the query and all movies
-- Returns the top 5 most similar movies based on title similarity
+- **Backend**: Flask (Python web framework)
+- **Frontend**: HTML, CSS, JavaScript
+- **Data Processing**: Pandas, NumPy
+- **Machine Learning**: Scikit-learn
+- **Deployment**: Render
+- **Version Control**: Git & GitHub
 
-### 4. Recommendation Engine
-- `find_similar_movies()` function takes a movie ID
-- Finds the movie title for that ID
-- Uses the search function to find movies with similar titles
-- Returns similar movies with their titles and genres
+## Features
 
-## Running the Code
-1. Ensure both CSV files are in the same directory as your script
+- Content-based movie recommendations
+- Search functionality
+- User-friendly web interface
+- Similar movie suggestions
+- Rating-based filtering
 
-2. Run the code in a Jupyter notebook environment (required for widgets)
+## Installation & Local Setup
 
-3. Type a movie title in the search box that appears
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package manager)
 
-4. View the similar movie recommendations below
+### Steps to Run Locally
 
-## Example Output
-When searching for "Avengers: Infinity War", the system might return:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Vanshikaajagtap/Movie-Recomendation-System.git
+   cd Movie-Recomendation-System
+<img width="1231" height="728" alt="Screenshot 2025-10-18 at 1 01 53 AM" src="https://github.com/user-attachments/assets/a31582f6-21f2-4657-951f-55759fbb56a8" />
+<img width="1231" height="837" alt="Screenshot 2025-10-18 at 1 02 38 AM" src="https://github.com/user-attachments/assets/9
+<img width="1231" height="837" alt="Screenshot 2025-10-18 at 1 03 02 AM" src="https://github.com/user-attachments/assets/342cd287-41dd-4b06-b84a-19e568bad791" />
+93d58e1-bc26-402d-bc07-74478cb56fc1" />
 
-- Avengers: Endgame
-- The Avengers
-- Avengers: Age of Ultron
-- Avengers Assemble
-- Ultimate Avengers
+
+
+   
