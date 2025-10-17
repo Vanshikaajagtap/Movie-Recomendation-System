@@ -23,37 +23,40 @@ tfidf = None
 
 def load_data():
     global movies, credits, vectorizer, tfidf
-    
     try:
-        # Try to load CSV files with proper path handling
-        movies_path = os.path.join(current_dir, "tmdb_5000_movies.csv")
-        credits_path = os.path.join(current_dir, "tmdb_5000_credits.csv")
+        # Load from public URL instead of local file
+        movies_url = "https://raw.githubusercontent.com/your-username/your-repo/main/tmdb_5000_movies.csv"
+        movies = pd.read_csv(movies_url)
+        print("CSV file loaded from URL successfully!")
         
-        print(f"Looking for movies at: {movies_path}")
-        print(f"Looking for credits at: {credits_path}")
+        # Check if poster_path column exists, if not create it
+        if 'poster_path' not in movies.columns:
+            print("Warning: poster_path column not found in CSV")
+            movies['poster_path'] = None
         
-        if os.path.exists(movies_path) and os.path.exists(credits_path):
-            movies = pd.read_csv(movies_path)
-            credits = pd.read_csv(credits_path)
-            print("CSV files loaded successfully!")
-            print(f"Loaded {len(movies)} movies")
-            
-            # Prepare the data
-            movies["clean_title"] = movies["title"].apply(clean_title)
-            
-            # Initialize vectorizer with actual data
-            vectorizer = TfidfVectorizer(ngram_range=(1,2))
-            tfidf = vectorizer.fit_transform(movies["clean_title"])
-            print("TF-IDF vectorizer trained successfully!")
-            return True
-        else:
-            print("CSV files not found. Creating sample data...")
-            create_sample_data()
-            return False
+        # Prepare the data - combine title, overview, and genres for content-based filtering
+        movies['clean_title'] = movies['title'].apply(clean_title)
+        
+        # Fill NaN values
+        movies['overview'] = movies['overview'].fillna('')
+        movies['genres'] = movies['genres'].fillna('[]')
+        movies['poster_path'] = movies['poster_path'].fillna('')
+        
+        # Create a content column for similarity matching
+        movies['content'] = (
+            movies['title'] + ' ' + 
+            movies['overview'] + ' ' + 
+            movies['genres'].apply(extract_genre_names)
+        )
+        
+        # Initialize vectorizer with movie content
+        vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+        tfidf_matrix = vectorizer.fit_transform(movies['content'])
+        print("TF-IDF vectorizer trained successfully with movie content!")
+        return True
             
     except Exception as e:
         print(f"Error loading data: {e}")
-        create_sample_data()
         return False
 
 def create_sample_data():
