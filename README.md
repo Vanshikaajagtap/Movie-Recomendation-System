@@ -36,9 +36,8 @@ Traditional movie discovery methods often fail to provide personalized suggestio
    git clone https://github.com/Vanshikaajagtap/Movie-Recomendation-System.git
    cd Movie-Recomendation-System
 <img width="1231" height="728" alt="Screenshot 2025-10-18 at 1 01 53 AM" src="https://github.com/user-attachments/assets/a31582f6-21f2-4657-951f-55759fbb56a8" />
-<img width="1231" height="837" alt="Screenshot 2025-10-18 at 1 02 38 AM" src="https://github.com/user-attachments/assets/9
+<img width="1231" height="837" alt="Screenshot 2025-10-18 at 1 02 38 AM" src="https://github.com/user-attachments/assets/993d58e1-bc26-402d-bc07-74478cb56fc1" />
 <img width="1231" height="837" alt="Screenshot 2025-10-18 at 1 03 02 AM" src="https://github.com/user-attachments/assets/342cd287-41dd-4b06-b84a-19e568bad791" />
-93d58e1-bc26-402d-bc07-74478cb56fc1" />
 
 
 
