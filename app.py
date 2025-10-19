@@ -224,6 +224,19 @@ def debug_search(title):
     
     return jsonify({"search_query": title, "results": movies_list})
 
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "Movie Recommendation API is working!",
+        "status": "success", 
+        "total_movies": len(movies),
+        "endpoints": {
+            "health": "/api/health",
+            "search": "/api/search (POST)",
+            "recommend": "/api/recommend (POST)"
+        }
+    })
+
 if __name__ == '__main__':
     print("Starting Movie Recommendation API...")
     print(f"Current directory: {current_dir}")
