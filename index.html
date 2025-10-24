@@ -237,7 +237,7 @@
     </div>
 
     <script>
-        // DOM elements
+         
         const searchInput = document.getElementById('movie-search');
         const searchBtn = document.getElementById('search-btn');
         const searchError = document.getElementById('search-error');
@@ -248,10 +248,8 @@
         const testConnectionBtn = document.getElementById('test-connection');
         const connectionStatus = document.getElementById('connection-status');
 
-        // Backend API endpoints
         let backendUrl = 'https://movie-recomendation-system.up.railway.app';
         
-        // Event listeners
         searchBtn.addEventListener('click', handleSearch);
         searchInput.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
@@ -259,7 +257,6 @@
             }
         });
 
-        // Add event listeners to suggestion buttons
         suggestions.forEach(suggestion => {
             suggestion.addEventListener('click', function() {
                 searchInput.value = this.getAttribute('data-movie');
@@ -267,17 +264,14 @@
             });
         });
 
-        // Update backend URL when input changes
         serverUrlInput.addEventListener('change', function() {
             backendUrl = this.value;
             connectionStatus.textContent = `Server URL set to: ${backendUrl}`;
             connectionStatus.style.color = '#4a8cff';
         });
 
-        // Test connection to backend
         testConnectionBtn.addEventListener('click', testBackendConnection);
 
-        // Test backend connection
         async function testBackendConnection() {
             connectionStatus.textContent = 'Testing connection...';
             connectionStatus.style.color = '#a0a0a0';
@@ -303,11 +297,11 @@
             }
         }
 
-        // Search function that connects to backend
+         
         async function handleSearch() {
             const query = searchInput.value.trim();
             
-            // Validation
+             
             if (query.length < 3) {
                 searchError.textContent = "Please enter a movie title with at least 3 characters";
                 searchError.classList.remove('hidden');
@@ -316,12 +310,12 @@
                 searchError.classList.add('hidden');
             }
             
-            // Show loading state
+             
             selectedMovieContent.innerHTML = '<div class="loading">Searching for movies...</div>';
             recommendationsContent.innerHTML = '<div class="loading">Finding recommendations...</div>';
             
             try {
-                // Step 1: Search for movies using backend API
+                 
                 const searchResponse = await fetch(`${backendUrl}/api/search`, {
                     method: 'POST',
                     headers: {
@@ -337,11 +331,11 @@
                 const searchResults = await searchResponse.json();
                 
                 if (searchResults.movies && searchResults.movies.length > 0) {
-                    // Use the first result as selected movie
+                     
                     const selectedMovie = searchResults.movies[0];
                     displaySelectedMovie(selectedMovie);
                     
-                    // Step 2: Get recommendations for the selected movie
+                     
                     const recResponse = await fetch(`${backendUrl}/api/recommend`, {
                         method: 'POST',
                         headers: {
@@ -367,9 +361,9 @@
             }
         }
 
-        // Display selected movie
+         
         function displaySelectedMovie(movie) {
-            // Parse genres if they're in string format
+             
             let genres = movie.genres;
             if (typeof genres === 'string') {
                 try {
@@ -395,11 +389,10 @@
             `;
         }
 
-        // Display recommendations
         function displayRecommendations(movies) {
             if (movies && movies.length > 0) {
                 recommendationsContent.innerHTML = movies.map(movie => {
-                    // Parse genres if they're in string format
+                     
                     let genres = movie.genres;
                     if (typeof genres === 'string') {
                         try {
@@ -429,11 +422,33 @@
             }
         }
 
-        // Initialize with default values
         window.addEventListener('DOMContentLoaded', () => {
             searchInput.value = "Avatar";
             serverUrlInput.value = backendUrl;
         });
+async function fetchWithRetry(url, options = {}, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response;
+            
+            await new Promise(resolve => 
+                setTimeout(resolve, Math.pow(2, i) * 1000)
+            );
+        } catch (error) {
+            if (i === retries - 1) throw error;
+        }
+    }
+    throw new Error('All retries failed');
+}
+        
+setInterval(async () => {
+    try {
+        await fetch('https://your-railway-url.up.railway.app/health');
+    } catch (e) {
+        console.log('Keep-alive ping failed');
+    }
+}, 10 * 60 * 1000); 
     </script>
 </body>
 </html>
