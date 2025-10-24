@@ -2,7 +2,7 @@
 
 A intelligent movie recommendation system built with Flask that suggests movies based on user preferences and content-based filtering.
 
-###Live Demo: https://vanshikaajagtap.github.io/Movie-Recomendation-System/
+### Live Demo: https://vanshikaajagtap.github.io/Movie-Recomendation-System/
 
 ## Problem Statement
 
